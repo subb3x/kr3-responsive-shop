@@ -19,19 +19,14 @@
 
 @media (min-width: 1024px) {
   .wrap { width: min(calc(100% - 72px), var(--wrap)); }
-  .featured-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .catalog-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .home-picks, .intro-screen { min-height: 72svh; }
-  .home-visit, .info-screen { min-height: 62svh; display: grid; align-content: center; }
-  .catalog-page {
-    min-height: 150svh;
-    padding-block: clamp(2rem, 4vw, 3.5rem);
-  }
-  .catalog-grid .card-media img { height: clamp(108px, 14svh, 145px); }
+  .featured-grid, .catalog-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .home-page .hero { min-height: 91svh; }
+  .home-visit img { height: clamp(380px, 57svh, 650px); }
+  .contact-overview img { height: clamp(320px, 48svh, 540px); }
+  .catalog-grid .card-media img { height: clamp(140px, 19svh, 205px); }
 }
 
 @media (min-width: 1280px) {
-  .catalog-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
   .catalog-layout { grid-template-columns: 220px minmax(0, 1fr); gap: 1.5rem; }
 }
 

@@ -56,12 +56,12 @@ function card(product) {
   </article>`;
 }
 
-const featured = document.querySelector('[data-featured]');
-if (featured) featured.innerHTML = products.slice(0, 4).map(card).join('');
-
 const catalog = document.querySelector('[data-catalog]');
 const filters = document.querySelector('.filters-form');
 const favoriteView = params.get('favorites') === '1';
+const pagination = document.querySelector('[data-pagination]');
+const pageSize = 16;
+let catalogPage = 1;
 
 function renderCatalog() {
   const fields = new FormData(filters);
@@ -76,7 +76,16 @@ function renderCatalog() {
     (!max || product.price <= Number(max)) &&
     product.name.toLowerCase().includes(search)
   ));
-  catalog.innerHTML = results.map(card).join('');
+  const pageCount = Math.max(1, Math.ceil(results.length / pageSize));
+  catalogPage = Math.min(catalogPage, pageCount);
+  const first = (catalogPage - 1) * pageSize;
+  catalog.innerHTML = results.slice(first, first + pageSize).map(card).join('');
+  pagination.hidden = pageCount < 2;
+  pagination.innerHTML = Array.from({length: pageCount}, (_, index) => {
+    const page = index + 1;
+    const current = page === catalogPage ? ' aria-current="page"' : '';
+    return `<button type="button" data-page="${page}" aria-label="Страница ${page}"${current}>${page}</button>`;
+  }).join('');
   document.querySelector('[data-result-count]').textContent = `Найдено: ${results.length}`;
   const empty = document.querySelector('[data-empty]');
   empty.hidden = results.length > 0;
@@ -96,9 +105,22 @@ if (catalog) {
   }
   filters.addEventListener('submit', event => {
     event.preventDefault();
+    catalogPage = 1;
     renderCatalog();
   });
-  filters.addEventListener('reset', () => requestAnimationFrame(renderCatalog));
+  filters.addEventListener('reset', () => {
+    catalogPage = 1;
+    requestAnimationFrame(renderCatalog);
+  });
+  pagination.addEventListener('click', event => {
+    const button = event.target.closest('[data-page]');
+    if (!button) return;
+    catalogPage = Number(button.dataset.page);
+    renderCatalog();
+    const firstGame = catalog.querySelector('h3 a');
+    firstGame.focus({preventScroll: true});
+    catalog.scrollIntoView({block: 'start'});
+  });
   renderCatalog();
 }
 
@@ -106,6 +128,20 @@ const productView = document.querySelector('[data-product]');
 const productId = params.get('id');
 const product = products.find(item => item.id === (productId ?? products[0].id));
 const dialog = document.querySelector('.order-dialog');
+
+const featured = document.querySelector('[data-featured]');
+if (featured) {
+  const section = featured.dataset.featured;
+  const assortment = ['ticket-to-ride', 'bang', 'azul', 'munchkin-2'];
+  const currentCategory = catalog?.dataset.category;
+  const selection = products.filter(item => {
+    if (section === 'about') return assortment.includes(item.id);
+    if (section === 'category') return item.category !== currentCategory;
+    return section === 'home' || item.id !== product?.id;
+  });
+  featured.innerHTML = selection.slice(0, section === 'about' ? 4 : 8).map(card).join('');
+}
+
 
 if (productView && product) {
   document.title = `${product.name} — TableWorld`;

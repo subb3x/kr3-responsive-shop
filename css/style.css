@@ -16,7 +16,6 @@
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 98px; }
 body { margin: 0; background: var(--paper); color: var(--ink); font: 1rem/1.55 system-ui, sans-serif; }
-main { min-height: 52vh; }
 img { display: block; max-width: 100%; height: auto; }
 a { color: var(--green); text-underline-offset: .22em; }
 a:hover { color: #7a4428; }
@@ -33,6 +32,7 @@ p + p { margin-top: .85rem; }
 
 .wrap { width: min(calc(100% - 32px), var(--wrap)); margin-inline: auto; }
 .section { padding-block: clamp(2.25rem, 6vw, 5.5rem); }
+.about-picks { padding-top: 2rem; }
 .eyebrow { margin-bottom: .7rem; color: var(--green); letter-spacing: .12em; text-transform: uppercase; font-size: .8rem; font-weight: 800; }
 .lead { font-size: clamp(1.08rem, 2vw, 1.25rem); color: var(--muted); }
 .muted { color: var(--muted); }
@@ -188,6 +188,8 @@ fieldset { min-width: 0; margin: .15rem 0; padding: .55rem; border: 1px solid #b
 .contact-panel dd { margin: 0 0 .7rem; color: var(--muted); }
 .map { display: block; width: 100%; height: clamp(320px, 55svh, 540px); border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper); }
 
+.contact-map .map { height: clamp(320px, 76svh, 850px); }
+
 .site-footer { padding: 2.25rem 0 1rem; background: var(--dark); color: #f8fbf4; }
 .footer-grid { display: grid; gap: 1.4rem; }
 .footer-grid h2 { font-size: 1rem; letter-spacing: 0; margin-bottom: .45rem; }
@@ -213,3 +215,24 @@ fieldset { min-width: 0; margin: .15rem 0; padding: .55rem; border: 1px solid #b
   font-size: 1.45rem;
 }
 .to-top:hover { background: #ffd08d; }
+
+.site-footer { border-top: 3px solid var(--accent); }
+.footer-contacts { display: grid; gap: .45rem; padding: 0; margin: .65rem 0 .8rem; list-style: none; }
+.footer-contacts li { display: flex; align-items: center; gap: .65rem; }
+.footer-contacts li a { margin: 0; }
+.footer-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 29px;
+  height: 29px;
+  border-radius: 7px;
+  background: var(--accent);
+  color: var(--dark);
+  font-size: 1.25rem;
+  line-height: 1;
+}
+.social-link { padding: .35rem .8rem; border: 1px solid #ffffff55; border-radius: 8px; text-decoration: none; }
+.social-link:hover { background: #ffffff20; }
+.pagination { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: 1rem; }
+.pagination button { min-width: 44px; min-height: 44px; padding: .35rem; color: var(--green); background: var(--white); border: 1px solid var(--line); border-radius: 8px; }
+.pagination [aria-current] { background: var(--green); color: var(--white); }
