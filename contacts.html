@@ -5,10 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Контакты — TableWorld</title>
   <meta name="description" content="TableWorld — магазин настольных игр в Коммунарке.">
-  <link rel="stylesheet" href="css/style.css?v=d8-top">
-  <link rel="stylesheet" href="css/responsive.css?v=heart-assets">
+  <script src="js/theme.js?v=profile-ui"></script>
+  <link rel="stylesheet" href="css/style.css?v=profile-ui">
+  <link rel="stylesheet" href="css/responsive.css?v=profile-ui">
   <script src="js/products.js" defer></script>
-  <script src="js/main.js?v=heart-assets" defer></script>
+  <script src="js/main.js?v=shared-favorites" defer></script>
 </head>
 <body>
   <header class="site-header">
@@ -20,7 +21,14 @@
         <a href="about.html">О магазине</a>
         <a href="contacts.html" aria-current="page">Контакты</a>
       </nav>
-      <a class="favorites-link" href="catalog.html?favorites=1" aria-label="Избранное"><img class="favorites-icon" src="images/heart-outline.svg" width="22" height="22" alt=""><span data-favorite-count>0</span></a>
+      <div class="header-actions">
+        <button class="theme-toggle" type="button" data-theme-toggle aria-label="Тёмная тема" title="Включить тёмную тему" aria-pressed="false">
+          <svg class="theme-icon theme-moon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 13.4A8.8 8.8 0 0 1 10.6 3.2a8.9 8.9 0 1 0 10.2 10.2Z"/></svg>
+          <svg class="theme-icon theme-sun" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M19 5l-1.5 1.5m-11 11L5 19"/></svg>
+        </button>
+        <a class="favorites-link" href="catalog.html?favorites=1" aria-label="Избранное"><img class="favorites-icon" src="images/heart-outline.svg" width="22" height="22" alt=""><span data-favorite-count>0</span></a>
+        <a class="account-link" href="account.html" aria-label="Личный кабинет" title="Личный кабинет"><svg class="account-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20v-2a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v2"/></svg></a>
+      </div>
     </div>
   </header>
   <main>
@@ -33,9 +41,13 @@
             <dt>Адрес</dt><dd>Москва, посёлок Коммунарка, ул. Александры Монаховой, 85к1</dd>
             <dt>Ориентир</dt><dd>ЖК «Бунинские луга», метро «Потапово»</dd>
             <dt>Телефон магазина</dt><dd><a href="tel:+79137900319">+7 (913) 790-03-19</a></dd>
-            <dt>E-mail</dt><dd><a href="mailto:subb3x@gmail.com">subb3x@gmail.com</a></dd>
             <dt>Часы работы</dt><dd>09:00–21:00</dd>
+            <dt>E-mail</dt><dd><a href="mailto:subb3x@gmail.com">subb3x@gmail.com</a></dd>
           </dl>
+          <div class="social-links" aria-label="Социальные сети">
+            <a class="social-link" href="https://t.me/suptrix">Telegram</a>
+            <a class="social-link" href="https://vk.ru/id365700185">VK</a>
+          </div>
           <a class="button" href="https://yandex.ru/maps/?rtext=~%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0%2C%20%D0%BF%D0%BE%D1%81%D1%91%D0%BB%D0%BE%D0%BA%20%D0%9A%D0%BE%D0%BC%D0%BC%D1%83%D0%BD%D0%B0%D1%80%D0%BA%D0%B0%2C%20%D1%83%D0%BB.%20%D0%90%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80%D1%8B%20%D0%9C%D0%BE%D0%BD%D0%B0%D1%85%D0%BE%D0%B2%D0%BE%D0%B9%2C%2085%D0%BA1&amp;rtt=pd">Построить маршрут</a>
         </div>
         <img class="feature-photo" src="images/visit.webp" alt="Игральные кости и блокноты на столе" width="960" height="623">
@@ -70,7 +82,10 @@
             <li><span class="footer-icon" aria-hidden="true">◷</span><span>09:00–21:00</span></li>
             <li><span class="footer-icon" aria-hidden="true">✉</span><a href="mailto:subb3x@gmail.com">subb3x@gmail.com</a></li>
           </ul>
-          <a class="social-link" href="https://t.me/suptrix">Telegram</a>
+          <div class="social-links">
+            <a class="social-link" href="https://t.me/suptrix">Telegram</a>
+            <a class="social-link" href="https://vk.ru/id365700185">VK</a>
+          </div>
         </div>
       </div>
       <p class="footer-bottom">© 2026 TableWorld. Все права защищены.</p>

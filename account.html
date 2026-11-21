@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Личный кабинет — TableWorld</title>
+  <meta name="description" content="TableWorld — магазин настольных игр в Коммунарке.">
+  <script src="js/theme.js?v=profile-ui"></script>
+  <link rel="stylesheet" href="css/style.css?v=profile-ui">
+  <link rel="stylesheet" href="css/responsive.css?v=profile-ui">
+  <script src="js/products.js" defer></script>
+  <script src="js/main.js?v=shared-favorites" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-row">
+      <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">8</span>TableWorld</a>
+      <nav class="site-nav" aria-label="Основная навигация">
+        <a href="index.html">Главная</a>
+        <a href="catalog.html">Каталог</a>
+        <a href="about.html">О магазине</a>
+        <a href="contacts.html">Контакты</a>
+      </nav>
+      <div class="header-actions">
+        <button class="theme-toggle" type="button" data-theme-toggle aria-label="Тёмная тема" title="Включить тёмную тему" aria-pressed="false">
+          <svg class="theme-icon theme-moon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 13.4A8.8 8.8 0 0 1 10.6 3.2a8.9 8.9 0 1 0 10.2 10.2Z"/></svg>
+          <svg class="theme-icon theme-sun" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M19 5l-1.5 1.5m-11 11L5 19"/></svg>
+        </button>
+        <a class="favorites-link" href="catalog.html?favorites=1" aria-label="Избранное"><img class="favorites-icon" src="images/heart-outline.svg" width="22" height="22" alt=""><span data-favorite-count>0</span></a>
+        <a class="account-link" href="account.html" aria-label="Личный кабинет" title="Личный кабинет" aria-current="page"><svg class="account-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20v-2a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v2"/></svg></a>
+      </div>
+    </div>
+  </header>
+  <main class="wrap section account-page">
+    <div class="account-heading">
+      <div class="account-badge"><span class="brand-mark" aria-hidden="true">8</span></div>
+      <div>
+        <h1>Личный кабинет</h1>
+        <p>Профиль и избранное сохраняются в этом браузере.</p>
+      </div>
+    </div>
+    <section class="account-panel" aria-labelledby="profile-title">
+      <h2 id="profile-title">Профиль</h2>
+      <form class="account-form" data-account-form>
+        <div class="account-fields">
+          <label>Имя<input name="name" autocomplete="given-name" maxlength="80" required></label>
+          <label>E-mail<input name="email" type="email" autocomplete="email" maxlength="120"></label>
+        </div>
+        <div class="account-form-actions">
+          <button class="button" type="submit">Сохранить профиль</button>
+          <p data-account-status role="status"></p>
+        </div>
+      </form>
+    </section>
+    <section class="account-panel" aria-labelledby="saved-games-title">
+      <div class="section-heading">
+        <h2 id="saved-games-title">Избранные игры <span class="account-count" data-favorite-count>0</span></h2>
+        <a class="button outline" href="catalog.html">В каталог</a>
+      </div>
+      <div class="products-grid featured-grid" data-account-favorites></div>
+      <div class="account-empty" data-account-empty tabindex="-1">
+        <img class="favorites-icon" src="images/heart-outline.svg" width="22" height="22" alt="">
+        <p>Здесь появятся игры, которые вы отметите сердечком.</p>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">8</span>TableWorld</a>
+          <p>Настольные игры для семейных вечеров, встреч с друзьями и тех, кто всегда готов сыграть ещё одну партию.</p>
+        </div>
+        <nav aria-label="Навигация в подвале">
+          <h2>Навигация</h2>
+          <a href="index.html">Главная</a>
+          <a href="catalog.html">Каталог</a>
+          <a href="about.html">О магазине</a>
+          <a href="contacts.html">Контакты</a>
+        </nav>
+        <div>
+          <h2>Мы на связи</h2>
+          <ul class="footer-contacts">
+            <li><span class="footer-icon" aria-hidden="true">⌖</span><a href="contacts.html#contacts">Москва, Коммунарка, ул. Александры Монаховой, 85к1</a></li>
+            <li><span class="footer-icon" aria-hidden="true">☎</span><a href="tel:+79137900319">+7 (913) 790-03-19</a></li>
+            <li><span class="footer-icon" aria-hidden="true">◷</span><span>09:00–21:00</span></li>
+            <li><span class="footer-icon" aria-hidden="true">✉</span><a href="mailto:subb3x@gmail.com">subb3x@gmail.com</a></li>
+          </ul>
+          <div class="social-links">
+            <a class="social-link" href="https://t.me/suptrix">Telegram</a>
+            <a class="social-link" href="https://vk.ru/id365700185">VK</a>
+          </div>
+        </div>
+      </div>
+      <p class="footer-bottom">© 2026 TableWorld. Все права защищены.</p>
+    </div>
+  </footer>
+  <button class="to-top" type="button" hidden>
+    <span class="brand-mark" aria-hidden="true">8</span>
+    <span>Вверх</span>
+  </button>
+</body>
+</html>

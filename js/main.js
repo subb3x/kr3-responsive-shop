@@ -16,14 +16,19 @@ const favoritesKey = 'tableworld-favorites';
 
 function readFavorites() {
   try {
-    const saved = JSON.parse(localStorage.getItem(favoritesKey) || '[]');
-    return new Set(Array.isArray(saved) ? saved.filter(id => products.some(product => product.id === id)) : []);
+    const saved = JSON.parse(localStorage.getItem(favoritesKey) ?? '[]');
+    const ids = Array.isArray(saved) ? saved : saved?.ids;
+    return new Set(Array.isArray(ids) ? ids.filter(id => products.some(product => product.id === id)) : []);
   } catch {
-    return new Set();
+    return null;
   }
 }
 
-let favorites = readFavorites();
+let favorites = readFavorites() ?? new Set();
+
+function favoriteGames() {
+  return products.filter(item => favorites.has(item.id));
+}
 
 function favoriteButton(product) {
   return `<button type="button" class="favorite-button" data-favorite="${product.id}" aria-pressed="false" aria-label="Избранное: ${product.name}"><img class="favorites-icon" src="images/heart-outline.svg" width="22" height="22" alt=""></button>`;
@@ -71,8 +76,8 @@ function renderCatalog() {
   const category = fields.get('category');
   const min = fields.get('min');
   const max = fields.get('max');
-  const results = products.filter(product => (
-    (!favoriteView || favorites.has(product.id)) &&
+  const games = favoriteView ? favoriteGames() : products;
+  const results = games.filter(product => (
     (!category || product.category === category) &&
     (!min || product.price >= Number(min)) &&
     (!max || product.price <= Number(max)) &&
@@ -123,13 +128,29 @@ if (catalog) {
     firstGame.focus({preventScroll: true});
     catalog.scrollIntoView({block: 'start'});
   });
-  renderCatalog();
+  if (!favoriteView) renderCatalog();
 }
 
 const productView = document.querySelector('[data-product]');
 const productId = params.get('id');
 const product = products.find(item => item.id === (productId ?? products[0].id));
 const dialog = document.querySelector('.order-dialog');
+
+const accountFavorites = document.querySelector('[data-account-favorites]');
+const accountEmpty = document.querySelector('[data-account-empty]');
+
+function refreshFavoriteViews() {
+  if (catalog && favoriteView) {
+    renderCatalog();
+    return;
+  }
+  if (accountFavorites) {
+    const games = favoriteGames();
+    accountFavorites.innerHTML = games.map(card).join('');
+    accountEmpty.hidden = games.length > 0;
+  }
+  updateFavorites();
+}
 
 const featured = document.querySelector('[data-featured]');
 if (featured) {
@@ -215,23 +236,27 @@ document.addEventListener('click', event => {
   const button = event.target.closest('[data-favorite]');
   if (!button) return;
   const id = button.dataset.favorite;
+  const nextId = button.closest('.product-card')?.nextElementSibling?.querySelector('[data-favorite]')?.dataset.favorite;
   if (favorites.has(id)) favorites.delete(id);
   else favorites.add(id);
   try {
     localStorage.setItem(favoritesKey, JSON.stringify([...favorites]));
   } catch {
-    // Избранное по-прежнему доступно в рамках текущей страницы.
+    // Без доступа к хранилищу избранное доступно на текущей странице.
   }
-  if (catalog && favoriteView) {
-    renderCatalog();
-    (catalog.querySelector('[data-favorite]') || document.querySelector('[data-tab="favorites"]')).focus();
-  } else updateFavorites();
+  refreshFavoriteViews();
+  const list = accountFavorites || (favoriteView ? catalog : null);
+  if (!list) return;
+  const focusTarget = list.querySelector(`[data-favorite="${nextId}"]`)
+    || list.querySelector('[data-favorite]')
+    || accountEmpty
+    || document.querySelector('[data-tab="favorites"]');
+  focusTarget.focus();
 });
 
 function syncFavorites() {
-  favorites = readFavorites();
-  if (catalog && favoriteView) renderCatalog();
-  else updateFavorites();
+  favorites = readFavorites() ?? favorites;
+  refreshFavoriteViews();
 }
 
 window.addEventListener('storage', event => {
@@ -242,7 +267,7 @@ window.addEventListener('pageshow', event => {
   if (event.persisted) syncFavorites();
 });
 
-updateFavorites();
+refreshFavoriteViews();
 
 const topButton = document.querySelector('.to-top');
 function updateTopButton() {
@@ -252,3 +277,122 @@ function updateTopButton() {
 window.addEventListener('scroll', updateTopButton, { passive: true });
 topButton.addEventListener('click', () => window.scrollTo({ top: 0 }));
 updateTopButton();
+
+
+const accountForm = document.querySelector('[data-account-form]');
+if (accountForm) {
+  const profileKey = 'tableworld-profile';
+  const status = accountForm.querySelector('[data-account-status]');
+
+  try {
+    const profile = JSON.parse(localStorage.getItem(profileKey));
+    if (profile) {
+      accountForm.elements.name.value = profile.name || '';
+      accountForm.elements.email.value = profile.email || '';
+    }
+  } catch {
+    // Если профиль недоступен, форма остаётся пустой.
+  }
+
+  accountForm.addEventListener('submit', event => {
+    event.preventDefault();
+    const fields = new FormData(accountForm);
+    const profile = {name: fields.get('name').trim(), email: fields.get('email').trim()};
+    if (!profile.name) {
+      status.textContent = 'Введите имя.';
+      accountForm.elements.name.focus();
+      return;
+    }
+
+    try {
+      localStorage.setItem(profileKey, JSON.stringify(profile));
+      status.textContent = 'Профиль сохранён.';
+    } catch {
+      status.textContent = 'Браузер не разрешил сохранить профиль.';
+    }
+  });
+}
+
+document.body.insertAdjacentHTML('beforeend', `
+  <button class="chat-launch" type="button" aria-expanded="false" aria-controls="consultant-chat">Чат с консультантом</button>
+  <section class="chat-widget" id="consultant-chat" aria-labelledby="chat-title" hidden>
+    <div class="chat-heading">
+      <h2 id="chat-title">Консультант TableWorld</h2>
+      <button class="chat-close" type="button" aria-label="Закрыть чат">×</button>
+    </div>
+    <div class="chat-log" role="log" aria-label="Сообщения" tabindex="0"></div>
+    <form class="chat-form">
+      <label class="sr-only" for="chat-message">Сообщение</label>
+      <input id="chat-message" name="message" placeholder="Ваш вопрос" autocomplete="off" maxlength="1000" required>
+      <button class="button" type="submit">Отправить</button>
+    </form>
+  </section>
+`);
+
+const chatLaunch = document.querySelector('.chat-launch');
+const chatWidget = document.querySelector('.chat-widget');
+const chatLog = chatWidget.querySelector('.chat-log');
+const chatForm = chatWidget.querySelector('.chat-form');
+const chatInput = chatForm.elements.message;
+const chatKey = 'tableworld-chat';
+let chatMessages = [];
+
+function readChat() {
+  try {
+    const stored = JSON.parse(sessionStorage.getItem(chatKey) || '[]');
+    if (Array.isArray(stored)) chatMessages = stored.filter(message => typeof message === 'string');
+  } catch {
+    // В закрытом хранилище история остаётся в памяти страницы.
+  }
+}
+
+function chatBubble(text, visitor = false) {
+  const message = document.createElement('p');
+  message.className = visitor ? 'chat-message from-visitor' : 'chat-message';
+  message.textContent = text;
+  return message;
+}
+
+function chatReply() {
+  return chatBubble('Консультант скоро ответит.');
+}
+
+function scrollChat() {
+  chatLog.scrollTop = chatLog.scrollHeight;
+}
+
+function setChatOpen(open) {
+  chatWidget.hidden = !open;
+  chatLaunch.setAttribute('aria-expanded', String(open));
+  if (open) {
+    readChat();
+    chatLog.replaceChildren(...chatMessages.map(text => chatBubble(text, true)));
+    if (chatMessages.length) chatLog.append(chatReply());
+    else chatLog.append(chatBubble('Здравствуйте! Чем можем помочь?'));
+    scrollChat();
+    chatInput.focus();
+  } else {
+    chatLaunch.focus();
+  }
+}
+
+chatLaunch.addEventListener('click', () => setChatOpen(chatWidget.hidden));
+chatWidget.querySelector('.chat-close').addEventListener('click', () => setChatOpen(false));
+chatWidget.addEventListener('keydown', event => {
+  if (event.key === 'Escape') setChatOpen(false);
+});
+chatForm.addEventListener('submit', event => {
+  event.preventDefault();
+  const message = chatInput.value.trim();
+  if (!message) return;
+  chatLog.lastElementChild.remove();
+  chatMessages.push(message);
+  chatLog.append(chatBubble(message, true), chatReply());
+  chatInput.value = '';
+  scrollChat();
+  try {
+    sessionStorage.setItem(chatKey, JSON.stringify(chatMessages));
+  } catch {
+    // Чат продолжает работать на текущей странице.
+  }
+});
