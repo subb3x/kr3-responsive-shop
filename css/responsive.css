@@ -23,7 +23,7 @@
   .home-page .hero { min-height: 91svh; }
   .home-visit img { height: clamp(380px, 57svh, 650px); }
   .contact-overview img { height: clamp(320px, 48svh, 540px); }
-  .catalog-grid .card-media img { height: clamp(140px, 19svh, 205px); }
+  .catalog-grid .card-media > a > img { height: clamp(140px, 19svh, 205px); }
 }
 
 @media (min-width: 1280px) {

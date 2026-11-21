@@ -26,7 +26,7 @@ function readFavorites() {
 let favorites = readFavorites();
 
 function favoriteButton(product) {
-  return `<button type="button" class="favorite-button" data-favorite="${product.id}" aria-pressed="false" aria-label="Избранное: ${product.name}"><svg class="favorites-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 21 3.8 12.8a5 5 0 0 1 7.1-7.1L12 6.8l1.1-1.1a5 5 0 0 1 7.1 7.1Z"/></svg></button>`;
+  return `<button type="button" class="favorite-button" data-favorite="${product.id}" aria-pressed="false" aria-label="Избранное: ${product.name}"><img class="favorites-icon" src="images/heart-outline.svg" width="22" height="22" alt=""></button>`;
 }
 
 function updateFavorites() {
@@ -36,6 +36,9 @@ function updateFavorites() {
   document.querySelectorAll('[data-favorite]').forEach(button => {
     const selected = favorites.has(button.dataset.favorite);
     button.setAttribute('aria-pressed', String(selected));
+    const icon = button.querySelector('.favorites-icon');
+    const source = selected ? 'images/heart-selected.svg' : 'images/heart-outline.svg';
+    if (icon.getAttribute('src') !== source) icon.setAttribute('src', source);
   });
 }
 
@@ -225,11 +228,18 @@ document.addEventListener('click', event => {
   } else updateFavorites();
 });
 
-window.addEventListener('storage', event => {
-  if (event.key !== favoritesKey && event.key !== null) return;
+function syncFavorites() {
   favorites = readFavorites();
   if (catalog && favoriteView) renderCatalog();
   else updateFavorites();
+}
+
+window.addEventListener('storage', event => {
+  if (event.key === favoritesKey || event.key === null) syncFavorites();
+});
+
+window.addEventListener('pageshow', event => {
+  if (event.persisted) syncFavorites();
 });
 
 updateFavorites();
