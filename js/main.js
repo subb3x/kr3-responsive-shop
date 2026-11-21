@@ -354,7 +354,9 @@ function chatBubble(text, visitor = false) {
 }
 
 function chatReply() {
-  return chatBubble('Консультант скоро ответит.');
+  const reply = chatBubble('Консультант скоро ответит.');
+  reply.classList.add('chat-reply');
+  return reply;
 }
 
 function scrollChat() {
@@ -366,9 +368,11 @@ function setChatOpen(open) {
   chatLaunch.setAttribute('aria-expanded', String(open));
   if (open) {
     readChat();
-    chatLog.replaceChildren(...chatMessages.map(text => chatBubble(text, true)));
+    chatLog.replaceChildren(
+      chatBubble('Здравствуйте! Чем можем помочь?'),
+      ...chatMessages.map(text => chatBubble(text, true))
+    );
     if (chatMessages.length) chatLog.append(chatReply());
-    else chatLog.append(chatBubble('Здравствуйте! Чем можем помочь?'));
     scrollChat();
     chatInput.focus();
   } else {
@@ -385,7 +389,7 @@ chatForm.addEventListener('submit', event => {
   event.preventDefault();
   const message = chatInput.value.trim();
   if (!message) return;
-  chatLog.lastElementChild.remove();
+  chatLog.querySelector('.chat-reply')?.remove();
   chatMessages.push(message);
   chatLog.append(chatBubble(message, true), chatReply());
   chatInput.value = '';
